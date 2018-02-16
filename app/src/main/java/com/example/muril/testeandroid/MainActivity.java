@@ -4,36 +4,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listView = (ListView) findViewById(R.id.lista) ;
+        ListView listView = findViewById(R.id.lista) ;
 
         List<Produto> listaProdutos = getProdutos();
 
-        ArrayAdapter<Produto> adapter = new ArrayAdapter<Produto>(this, android.R.layout.simple_list_item_1, listaProdutos);
+        ArrayAdapter<Produto> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaProdutos);
 
         listView.setAdapter(adapter);
+
+        Amazon amazon = new Amazon(this);
+        amazon.execute();
     }
 
-    public List<Produto> getProdutos(){
-        List<Produto> list = new ArrayList<Produto>();
-        Produto pao = new Produto("Pão", 0.5f);
-        Produto queijo = new Produto("Queijo", 0.5f);
+    private List<Produto> getProdutos(){
+        List<Produto> list = new ArrayList<>();
+        Produto batataDoce = new Produto("Batata Doce", 0.000001f);
+        Produto whey = new Produto("Whey", 99999999.9999999999f);
+        Produto frango = new Produto("Frango", 10.0f);
 
-        list.add(pao);
-        list.add(queijo);
+        list.add(batataDoce);
+        list.add(whey);
+        list.add(frango);
 
         return list;
     }
