@@ -1,4 +1,4 @@
-package com.amazonaws.mobile.util;
+package com.example.muril.testeandroid2.amazonaws.mobile.util;
 
 public final class StringFormatUtils {
 

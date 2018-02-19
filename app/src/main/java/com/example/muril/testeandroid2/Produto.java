@@ -1,4 +1,4 @@
-package com.example.muril.testeandroid;
+package com.example.muril.testeandroid2;
 
 public class Produto {
     String nome;

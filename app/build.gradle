@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
     defaultConfig {
-        applicationId "com.example.muril.testeandroid"
+        applicationId "com.example.muril.testeandroid2"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
@@ -35,6 +35,9 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-ddb-mapper:2.6.+'
     compile ('com.amazonaws:aws-android-sdk-mobile-client:2.6.7@aar') { transitive = true; }
     compile 'com.amazonaws:aws-android-sdk-pinpoint:2.6.+'
+    //Reader
+    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
     testCompile 'junit:junit:4.12'
 }
 
