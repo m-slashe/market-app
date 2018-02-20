@@ -3,29 +3,21 @@ package com.example.muril.testeandroid2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-import com.amazonaws.http.HttpClient;
-import com.amazonaws.http.HttpResponse;
-import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
-import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     public static PinpointManager pinpointManager;
     DynamoDBMapper dynamoDBMapper;
 
+    TextView nome;
+    TextView descricao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
         final Context context = this;
 
+        nome = findViewById(R.id.scan_format);
+        descricao = findViewById(R.id.scan_content);
+
         Button button = findViewById(R.id.scan_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetProdutoInfo().execute();
-                //new IntentIntegrator((MainActivity)context).initiateScan();
+                //new GetProdutoInfo().execute("7892840808044");
+                new IntentIntegrator((MainActivity)context).initiateScan();
             }
         });
 
@@ -108,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Log.d("MainActivity", "Scanned");
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                new GetProdutoInfo().execute(result.getContents());
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment
@@ -115,26 +114,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class GetProdutoInfo extends AsyncTask<String, String, String>{
+    private class GetProdutoInfo extends AsyncTask<String, String, JSONObject>{
 
         @Override
-        protected String doInBackground(String... uri) {
+        protected JSONObject doInBackground(String... params) {
             try{
-                URL url = new URL("https://api.cosmos.bluesoft.com.br/gtins/7891203010209");
+                String gtin = params[0];
+                String cosmos = "http://api.cosmos.bluesoft.com.br/gtins/" + gtin;
+                URL url = new URL(cosmos);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
-                connection.setRequestProperty("X-Cosmos-Token", "aKnNVyWGRGr3kDmqvhRyow");
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setDoOutput(true);
-                connection.setConnectTimeout(5000);
-                connection.setReadTimeout(5000);
-                connection.connect();
-                BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String content = "", line;
-                while ((line = rd.readLine()) != null) {
-                    content += line + "\n";
+                connection.setRequestProperty("X-Cosmos-Token", "4G2LdsaO4WYzwDuLiHQ50w");
+                connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String content = "", line;
+                    while ((line = rd.readLine()) != null) {
+                        content += line + "\n";
+                    }
+                    return new JSONObject(content);
                 }
-                return content;
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -142,9 +142,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            //Do anything with response..
+        protected void onPostExecute(JSONObject produto) {
+            super.onPostExecute(produto);
+            if(produto != null){
+                try {
+                    JSONObject ncm = produto.getJSONObject("ncm");
+                    nome.setText(produto.getString("description"));
+                    descricao.setText(ncm.getString("full_description"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
