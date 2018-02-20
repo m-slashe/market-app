@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+        <TextView
+                android:text="Nome"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/textView4"/>
+        <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:id="@+id/edit_forn"/>
+    </LinearLayout>
+    <Button
+            android:text="Inserir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_inserir"/>
+    <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/spinner"/>
+    <com.google.android.gms.maps.MapView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/mapView"/>
+    <Button
+            android:text="Atualizar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/btn_update_forn"/>
+
+</LinearLayout>

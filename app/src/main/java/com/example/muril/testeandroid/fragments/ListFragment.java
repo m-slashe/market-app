@@ -1,4 +1,4 @@
-package com.example.muril.testeandroid.amazonaws.fragments;
+package com.example.muril.testeandroid.fragments;
 
 
 import android.os.AsyncTask;
@@ -8,15 +8,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
 import com.example.muril.testeandroid.ProdutoAdapter;
 import com.example.muril.testeandroid.R;
 import com.example.muril.testeandroid.Util;
 import com.example.muril.testeandroid.amazonaws.models.nosql.ProdutoDO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListFragment extends AbstractFragment {
@@ -38,10 +36,15 @@ public class ListFragment extends AbstractFragment {
             @Override
             protected List<ProdutoDO> doInBackground(String... params) {
                 try{
-                    DynamoDBScanExpression expression = new DynamoDBScanExpression();
-                    return getDynamoDB().scan(ProdutoDO.class, expression);
+                    ProdutoDO teste = new ProdutoDO();
+                    teste.setType("Produto");
+
+                    DynamoDBQueryExpression<ProdutoDO> expression = new DynamoDBQueryExpression<ProdutoDO>()
+                            .withHashKeyValues(teste)
+                            .withConsistentRead(false);
+
+                    return getDynamoDB().query(ProdutoDO.class, expression);
                 }catch (Exception e){
-                    Util.ShowToast(getContext(),"Não foi possivel ler os dados!!!");
                     return null;
                 }
             }
@@ -50,11 +53,12 @@ public class ListFragment extends AbstractFragment {
             protected void onPostExecute(List<ProdutoDO> list) {
                 super.onPostExecute(list);
                 if(list != null){
-                    List<ProdutoDO> modifiedList = new ArrayList<>();
-                    modifiedList.addAll(list);
-                    ProdutoAdapter adapter = new ProdutoAdapter(getContext(), R.layout.listadapter, modifiedList);
+                    getProdutosList().clear();
+                    getProdutosList().addAll(list);
+                    ProdutoAdapter adapter = new ProdutoAdapter(getContext(), R.layout.listadapter, getProdutosList());
                     listView.setAdapter(adapter);
-                }
+                }else
+                    Util.ShowToast(getContext(),"Não foi possivel ler os dados!!!");
             }
         }.execute();
     }
