@@ -31,8 +31,10 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-ddb-mapper:2.6.+'
     compile ('com.amazonaws:aws-android-sdk-mobile-client:2.6.7@aar') { transitive = true; }
     compile 'com.amazonaws:aws-android-sdk-pinpoint:2.6.+'
-    testCompile 'junit:junit:4.12'
+    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
+    testCompile 'junit:junit:4.12'
+
 }
 
 allprojects {
