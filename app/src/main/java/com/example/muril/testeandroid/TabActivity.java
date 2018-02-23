@@ -1,5 +1,6 @@
 package com.example.muril.testeandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import com.example.muril.testeandroid.fragments.FornecedorFragment;
 import com.example.muril.testeandroid.fragments.InsertFragment;
 import com.example.muril.testeandroid.fragments.ListFragment;
 import com.example.muril.testeandroid.amazonaws.models.nosql.ProdutoDO;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +93,21 @@ public class TabActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == IntentIntegrator.REQUEST_CODE) {
+            FragmentManager mgr = getSupportFragmentManager();
+            Fragment parent = mgr.findFragmentByTag("Inserir");
+            if(parent != null) {
+                mgr = parent.getChildFragmentManager();
+                // I want the first child because I know he called the scanner
+                Fragment fragment = mgr.getFragments().get(0);
+                if(fragment != null)
+                    fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 }

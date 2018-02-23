@@ -52,13 +52,11 @@ public class InsertFragment extends AbstractFragment {
         editGtin = view.findViewById(R.id.editText3);
         final Spinner editForn = view.findViewById(R.id.edit_forn2);
 
-        final Fragment fragment = this;
-
         Button button = view.findViewById(R.id.scan);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentIntegrator.forFragment(fragment).initiateScan();
+                new IntentIntegrator(getActivity()).initiateScan();
             }
         });
 
@@ -151,10 +149,51 @@ public class InsertFragment extends AbstractFragment {
                 Util.ShowToast(getContext(), "Cancelled");
             } else {
                 Util.ShowToast(getContext(), "Scanned: " + result.getContents());
-                new GetProdutoInfo().execute(result.getContents());
+                new VerifyAlreadyExists().execute(result.getContents());
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private class VerifyAlreadyExists extends AsyncTask<String, String, List<ProdutoDO>> {
+
+        String gtin;
+
+        @Override
+        protected List<ProdutoDO> doInBackground(String... params) {
+            try {
+                gtin = params[0];
+                Double gtinD = Double.valueOf(gtin);
+                ProdutoDO teste = new ProdutoDO();
+                teste.setGtin(gtinD);
+
+                DynamoDBQueryExpression<ProdutoDO> expression = new DynamoDBQueryExpression<ProdutoDO>()
+                        .withHashKeyValues(teste)
+                        .withConsistentRead(false);
+
+                return getDynamoDB().query(ProdutoDO.class, expression);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<ProdutoDO> produto) {
+            super.onPostExecute(produto);
+            if (produto != null) {
+                try {
+                    ProdutoDO existe = produto.get(0);
+                    editNome.setText(existe.getName());
+                    editDescricao.setText(existe.getDescription());
+                    editGtin.setText(String.valueOf(existe.getGtin()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else{
+                new GetProdutoInfo().execute(gtin);
+            }
         }
     }
 

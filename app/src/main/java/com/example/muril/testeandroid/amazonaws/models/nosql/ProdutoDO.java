@@ -49,6 +49,7 @@ public class ProdutoDO {
         this._description = _description;
     }
 
+    @DynamoDBIndexHashKey(attributeName = "gtin", globalSecondaryIndexName = "Gtin")
     @DynamoDBAttribute(attributeName = "gtin")
     public Double getGtin() {
         return _gtin;
