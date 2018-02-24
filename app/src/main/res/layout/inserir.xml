@@ -105,6 +105,25 @@
                     android:ems="10"
                     android:id="@+id/edit_forn2"/>
         </LinearLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="50dp"
+                      android:orientation="horizontal"
+                      tools:layout_constraintTop_creator="1"
+                      tools:layout_constraintRight_creator="1"
+                      app:layout_constraintRight_toRightOf="@+id/linearLayout"
+                      app:layout_constraintTop_toBottomOf="@+id/linearLayout" tools:layout_constraintLeft_creator="1"
+                      app:layout_constraintLeft_toRightOf="@+id/linearLayout">
+            <TextView
+                    android:text="Preço"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/preco_text"/>
+            <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:ems="10"
+                    android:id="@+id/edit_preco"/>
+        </LinearLayout>
         <Button
                 android:text="Inserir"
                 android:layout_width="100dp"

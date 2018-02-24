@@ -182,7 +182,7 @@ public class InsertFragment extends AbstractFragment {
         @Override
         protected void onPostExecute(List<ProdutoDO> produto) {
             super.onPostExecute(produto);
-            if (produto != null) {
+            if (produto != null && produto.size() != 0) {
                 try {
                     ProdutoDO existe = produto.get(0);
                     editNome.setText(existe.getName());

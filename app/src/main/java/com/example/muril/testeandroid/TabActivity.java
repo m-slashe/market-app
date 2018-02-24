@@ -100,14 +100,8 @@ public class TabActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == IntentIntegrator.REQUEST_CODE) {
             FragmentManager mgr = getSupportFragmentManager();
-            Fragment parent = mgr.findFragmentByTag("Inserir");
-            if(parent != null) {
-                mgr = parent.getChildFragmentManager();
-                // I want the first child because I know he called the scanner
-                Fragment fragment = mgr.getFragments().get(0);
-                if(fragment != null)
-                    fragment.onActivityResult(requestCode, resultCode, data);
-            }
+            Fragment fragment = mgr.getFragments().get(1);
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
